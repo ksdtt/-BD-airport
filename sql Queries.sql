@@ -44,34 +44,33 @@ select * from Employee join Post using(idPost);
 -- 13) Узнать количество работников с одинаковым семейным положением и 
 -- занимаемой должностью, отсортировав по должности:
 select Post, FamilyStatus, count(*) as "кол-во" from Employee join Post using(idPost)
-															  join FamilyStatus using(idFamilyStatus)
+							      join FamilyStatus using(idFamilyStatus)
 group by FamilyStatus, Post
 order by Post asc;
 
 -- 14) Показать среди людей пассажиров, которые летят в Саратов:
 select * from People
 where idPeople in (select idPeople from Passenger
-				  where idPassenger in (select idPassenger from Card
-									   where idFlight in (select idFlight from Flight
-														 where idDirection in (select idDirection from Direction
-																			  where ArrivialAirport in (select idCity from City
-																									   where City = 'Саратов')))));
+		   where idPassenger in (select idPassenger from Card
+					 where idFlight in (select idFlight from Flight
+							    where idDirection in (select idDirection from Direction
+										  where ArrivialAirport in (select idCity from City
+													    where City = 'Саратов')))));
 
 -- 15) Показать расписание рейсов:
 create view tablo as select FlightNumber as "Номер рейса",
-							TravelTime as "Время в пути",
-							DateFlight as "Дата рейса",
-							A.Airport as "Аэропорт отправления",
-							C.City as "Город отправления",
-							F.Country as "Старана отправления",
-							B.Airport as "Аэропорт прибытия",
-							E.City as "Город прибытия",
-							G.Country as "Страна прибытия"
-							from Flight join Direction D using(idDirection)
-							            left join Airport A on A.idAirport=D.DepartureAirport
-										join Airport B on B.idAiport=D.ArrivialAirport
-										join City C on C.idCity=A.idCity
-										join City E on E.idCity=B.idCity
-										join Country F on F.idCountry=C.idCountry
-										join Country G on G.idCountry=E.idCountry;
+			    TravelTime as "Время в пути",
+			    DateFlight as "Дата рейса",
+			    A.Airport as "Аэропорт отправления",
+			    C.City as "Город отправления",
+			    F.Country as "Старана отправления",
+			    B.Airport as "Аэропорт прибытия",
+			    E.City as "Город прибытия",
+			    G.Country as "Страна прибытия"
+			    from Flight join Direction D using(idDirection)  left join Airport A on A.idAirport=D.DepartureAirport
+										  join Airport B on B.idAiport=D.ArrivialAirport
+										  join City C on C.idCity=A.idCity
+										  join City E on E.idCity=B.idCity
+										  join Country F on F.idCountry=C.idCountry
+										  join Country G on G.idCountry=E.idCountry;
 select * from tablo;						
